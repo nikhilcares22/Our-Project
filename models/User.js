@@ -65,12 +65,17 @@ var userSchema = new mongoose.Schema({
     //     default: 0
     // },
     resetPasswordExpires: {
-        type: Date,
-        required: false
+        type: Number,
     },
     resetPasswordToken: {
         type: String,
         required: false
+    },
+    resetOtp: {
+        type: Number,
+    },
+    resetOtpExpires: {
+        type: Number,
     },
     authToken: {
         type: String,
@@ -119,6 +124,10 @@ userSchema.methods.comparePassword = function (plaintext) {
 userSchema.methods.generatePasswordReset = function () {
     this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
     this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+};
+userSchema.methods.generateOtpPasswordReset = function () {
+    this.resetOtp = Math.floor(Math.random() * 1e6);
+    this.resetOtpExpires = Date.now() + 3600000; //expires in an hour
 };
 
 module.exports = mongoose.model('User', userSchema);

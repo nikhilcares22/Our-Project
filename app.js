@@ -12,7 +12,6 @@ global.constants = constants;
 global.ObjectId = mongoose.Types.ObjectId;
 
 let apiRoutes = require('./routes/index');
-const { string } = require('joi');
 
 let app = express();
 

@@ -2,7 +2,9 @@ const ValidatorService = require('../validator/joi')
 const Model = require('../models');
 const dbService = require('../db/dbServices');
 const jwtService = require('../services/jwtService');
+const twilioService = require('../services/twilioService');
 const emailService = require('../services/emailService');
+const constants = require('../constants/constants');
 module.exports = {
     signup: async (req, res, next) => {
         try {
@@ -56,8 +58,42 @@ module.exports = {
     },
     resetPassword: async (req, res, next) => {
         try {
-            emailService.sendMail()
+            let { email, phone, type } = req.body;
+            if ((!email && !phone) || !type) return res.error(constants.REQUIRED, 422)
+            if ((email && type == 'phone') || (phone && type == 'email')) return res.error(constants.INVALIDTYPE, 422)
+            if (type == 'email') {
+                let foundUser = await dbService.checkIfExisting(Model.User, { email: email }, 'email');
 
+                foundUser.generatePasswordReset();
+                let newfoundUser = await foundUser.save();
+
+                // let newfoundUser = await dbService.checkIfExisting(Model.User, { email: email }, 'email');
+
+                let info = await emailService.sendMail({ email: email, type: 1, token: newfoundUser.resetPasswordToken })
+                return res.success(constants.EMAILSENTSUCCESS, info.accepted, 200);
+            }
+            if (type == 'phone') {
+                let foundUser = await dbService.checkIfExisting(Model.User, { phone: phone }, 'phone');
+                foundUser.generateOtpPasswordReset()
+                let newFoundUser = await foundUser.save();
+                let result = await twilioService.sendSMS({ phone: `+91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}api/admin/verifyUser/:${newFoundUser.resetOtp}?type=phone` })
+                return res.success(constants.SMSSENTSUCCESS, result, 200)
+            }
+        } catch (error) {
+            console.log(error)
+            next(error);
+        }
+    },
+    verifyUser: async (req, res, next) => {
+        try {
+            let { type } = req.query;
+            let { code } = req.params;
+            if (!type) {
+                console.log(code, type, Date.now());
+                console.log(1614617839732 > Date.now());
+                let foundUser = await Model.User.findOne({ resetPasswordToken: code, resetPasswordExpires: { $gt: Date.now() } });
+                if (!foundUser) return res.render()
+            }
         } catch (error) {
             console.log(error)
             next(error);
