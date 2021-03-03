@@ -3,6 +3,7 @@ let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let morgan = require('morgan');
+let cors = require('cors');
 let middleware = require('./middleware');
 let mongoose = require('mongoose')
 require('./db/connect').configure(mongoose);
@@ -19,6 +20,7 @@ let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(cors())
 app.use(morgan(function (tokens, req, res) {
   let pattern = new RegExp('^/css', 'i')
   let result = pattern.test(tokens.url(req, res))

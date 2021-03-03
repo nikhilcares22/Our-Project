@@ -76,7 +76,8 @@ module.exports = {
                 let foundUser = await dbService.checkIfExisting(Model.User, { phone: phone }, 'phone');
                 foundUser.generateOtpPasswordReset()
                 let newFoundUser = await foundUser.save();
-                let result = await twilioService.sendSMS({ phone: `+91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}api/admin/verifyUser/:${newFoundUser.resetOtp}?type=phone` })
+                console.log(`${constants.BASEURL}/verifyUser/:${newFoundUser.resetOtp}?type=phone`)
+                let result = await twilioService.sendSMS({ phone: `+91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}/verifyUser/:${newFoundUser.resetOtp}?type=phone` })
                 return res.success(constants.SMSSENTSUCCESS, result, 200)
             }
         } catch (error) {
