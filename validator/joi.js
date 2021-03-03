@@ -40,6 +40,18 @@ module.exports = {
         if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
         return value;
     },
+    validResetPassword: function (data) {
+        const joiSchema = joi.object({
+            email: joi.string().email(),
+            phone: joi.number(),
+            type: joi.any().allow('email', 'phone').required(),
+        })
+            .or('phone', 'email');
+
+        let { error, value } = joiSchema.validate(data)
+        if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
+        return value;
+    },
     validateUser: function (data) {
         const joiSchema = joi.object({
             firstName: joi.string().min(3).trim().required(undefined, { presence: "required" }),

@@ -58,9 +58,11 @@ module.exports = {
     },
     resetPassword: async (req, res, next) => {
         try {
-            let { email, phone, type } = req.body;
-            if ((!email && !phone) || !type) return res.error(constants.REQUIRED, 422)
-            if ((email && type == 'phone') || (phone && type == 'email')) return res.error(constants.INVALIDTYPE, 422)
+            // let { email, phone, type } = req.body;
+            // if ((!email && !phone) || !type) return res.error(constants.REQUIRED, 422)
+            // if ((email && type == 'phone') || (phone && type == 'email')) return res.error(constants.INVALIDTYPE, 422)
+            ValidatorService.validResetPassword(req.body);
+            let { type, phone, email } = req.body
             if (type == 'email') {
                 let foundUser = await dbService.checkIfExisting(Model.User, { email: email }, 'email');
 
@@ -76,8 +78,8 @@ module.exports = {
                 let foundUser = await dbService.checkIfExisting(Model.User, { phone: phone }, 'phone');
                 foundUser.generateOtpPasswordReset()
                 let newFoundUser = await foundUser.save();
-                console.log(`${constants.BASEURL}/verifyUser/:${newFoundUser.resetOtp}?type=phone`)
-                let result = await twilioService.sendSMS({ phone: `+91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}/verifyUser/:${newFoundUser.resetOtp}?type=phone` })
+                console.log(`${constants.BASEURL}/verifyUser/?code=${newFoundUser.resetOtp}&type=phone`)
+                let result = await twilioService.sendSMS({ phone: `91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}verifyUser/?code=${newFoundUser.resetOtp}&type=phone` })
                 return res.success(constants.SMSSENTSUCCESS, result, 200)
             }
         } catch (error) {
@@ -87,8 +89,8 @@ module.exports = {
     },
     verifyUser: async (req, res, next) => {
         try {
-            let { type } = req.query;
-            let { code } = req.params;
+            let { type, code } = req.query;
+            // let { code } = req.params;
             if (!type) {
                 console.log(code, type, Date.now());
                 console.log(1614617839732 > Date.now());
