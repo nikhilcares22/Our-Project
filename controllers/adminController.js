@@ -21,6 +21,8 @@ module.exports = {
             }
             Object.assign(req.body, newObj)
             let result = await new Model.User(req.body).save();
+            result.password = req.generateHash(req.body.password)
+            await result.save()
             return res.success(constants.true, result, 200);
         } catch (error) {
             next(error);
