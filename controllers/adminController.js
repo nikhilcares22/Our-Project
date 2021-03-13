@@ -20,7 +20,7 @@ module.exports = {
                 isEmailVerified: true
             }
             Object.assign(req.body, newObj)
-            let result = await Model.User.create(req.body);
+            let result = await new Model.User(req.body).save();
             return res.success(constants.true, result, 200);
         } catch (error) {
             next(error);
