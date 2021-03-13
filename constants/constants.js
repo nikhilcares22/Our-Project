@@ -19,6 +19,8 @@ module.exports = {
     REQUIRED: `Required`,
     INVALIDTYPE: `Invalid Type`,
     TOKENEXPIRED: `Token expired`,
+    USERVERIFIED: `User Verified`,
+    OTPVERIFIED: `OTP Verified`,
 
     //token related
     TOKENMISSING: `Auth Token Missing.`,

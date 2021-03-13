@@ -1,6 +1,7 @@
 const ValidatorService = require('../validator/joi')
 const Model = require('../models');
 const dbService = require('../db/dbServices');
+const crypto = require('crypto');
 const jwtService = require('../services/jwtService');
 const twilioService = require('../services/twilioService');
 const emailService = require('../services/emailService');
@@ -43,14 +44,19 @@ module.exports = {
     },
     changePassword: async (req, res, next) => {
         try {
-            ValidatorService.validChangePassword(req.body);
-            let a = req.user.comparePassword(req.body.oldPassword)
-            if (!a) return res.error(constants.INVALIDPASS, 401)
-            let newObj = {
-                password: req.user.generateHash(req.body.password)
+            if (!type) {
+                ValidatorService.validChangePassword(req.body);
+                let a = req.user.comparePassword(req.body.oldPassword)
+                if (!a) return res.error(constants.INVALIDPASS, 401)
+                let newObj = {
+                    password: req.user.generateHash(req.body.password)
+                }
+                let updatedUser = await Model.User.findByIdAndUpdate(req.user._id, newObj, { new: true });
+                return res.success(constants.PWDCHANGED, updatedUser, 200)
             }
-            let updatedUser = await Model.User.findByIdAndUpdate(req.user._id, newObj, { new: true });
-            return res.success(constants.PWDCHANGED, updatedUser, 200)
+            if (type == 'verified') {
+
+            }
         } catch (error) {
             console.log(error)
             next(error)
@@ -78,10 +84,10 @@ module.exports = {
                 let foundUser = await dbService.checkIfExisting(Model.User, { phone: phone }, 'phone');
                 foundUser.generateOtpPasswordReset()
                 let newFoundUser = await foundUser.save();
-                console.log(`${constants.BASEURL}/verifyUser/?code=${newFoundUser.resetOtp}&type=phone`)
+                console.log(`${constants.BASEURL}verifyUser/?code=${newFoundUser.resetOtp}&type=phone`)
                 let result = await twilioService.sendSMS({ phone: `91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}verifyUser/?code=${newFoundUser.resetOtp}&type=phone` })
                 return res.success(constants.SMSSENTSUCCESS, result, 200)
-            }
+            }                                                                                                                   
         } catch (error) {
             console.log(error)
             next(error);
@@ -91,11 +97,18 @@ module.exports = {
         try {
             let { type, code } = req.query;
             // let { code } = req.params;
-            if (!type) {
-                console.log(code, type, Date.now());
-                console.log(1614617839732 > Date.now());
+            if (type == 'email') {
                 let foundUser = await Model.User.findOne({ resetPasswordToken: code, resetPasswordExpires: { $gt: Date.now() } });
-                if (!foundUser) return res.render()
+                // if (!foundUser) return res.render() pending
+            }
+            if (type == 'phone') {
+                console.log(code, type, Date.now());
+                let foundUser = await Model.User.findOne({ resetOtp: code, resetOtpExpires: { $gt: Date.now() } }).lean();
+                if (!foundUser) return res.error(constants.TOKENEXPIRED, 201)
+                // console.log(foundUser);
+                let uniqueCode = await crypto.randomBytes(24)
+                console.log('djjd', uniqueCode.toString('hex'));
+                return res.success(constants.OTPVERIFIED, foundUser, 201)
             }
         } catch (error) {
             console.log(error)

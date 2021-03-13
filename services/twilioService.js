@@ -51,12 +51,12 @@ module.exports = {
                     axiosConfig
                 )
                 .then((json) => {
-                    return resolve(json)
+                    return resolve(true)
                 })
-                .catch((error) => {
-                    console.error(error);
-                    return reject(error)
-                });
+                // .catch((error) => {
+                //     console.error(error);
+                //     return reject(error)
+                // });
         })
 
     }
