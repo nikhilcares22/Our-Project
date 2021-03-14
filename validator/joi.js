@@ -46,14 +46,21 @@ module.exports = {
             phone: joi.number(),
             type: joi.any().allow('email', 'phone').required(),
         })
-            .or('phone', 'email');
-
+        .or('phone', 'email');
+        
         let { error, value } = joiSchema.validate(data)
         if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
         return value;
     },
     validAdminProfile: function (data) {
         const joiSchema = joi.object({
+            // email: joi.string().email(),
+            // phone: joi.number(),
+            firstName: joi.string(),
+            lastName: joi.string(),
+            phone: joi.number(),
+            countryCode: joi.string(),
+            image: joi.string(),
 
         })
 
