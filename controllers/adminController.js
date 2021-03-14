@@ -31,11 +31,11 @@ module.exports = {
     signin: async (req, res, next) => {
         try {
             req.body = ValidatorService.validateAdminSignin(req.body)
-            console.log(req.body);
+            // console.log(req.body);
             let resultUser = await Model.User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] })
             console.log(resultUser);
             if (!resultUser) return res.error(constants.NOTFOUND)
-            console.log(resultUser.comparePassword(req.body.password))
+            // console.log(resultUser.comparePassword(req.body.password))
             if (!resultUser.comparePassword(req.body.password)) return res.error(constants.PWDMISMATCH, 401);
             let authToken = jwtService.generateToken({ id: resultUser._id, role: 'Admin' })
             let newObj = {
