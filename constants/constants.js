@@ -2,7 +2,7 @@ module.exports = {
     //boolean
     TRUE: true,
     FALSE: false,
-
+    SUCCESSFULL: 'Successfull',
     //user related
     VALIDATION: `Validation error`,
     USEREXIST: `User already exists with `,

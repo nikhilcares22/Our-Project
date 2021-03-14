@@ -9,8 +9,6 @@ router.put('/changePassword', Auth('isAdmin'), Controller.Admin.changePassword);
 router.post('/resetPassword', Controller.Admin.resetPassword);
 router.get('/verifyUser', Controller.Admin.verifyUser);
 router.put('/changePass', Controller.Admin.changePassword)
-// router.get('/getProfile', auth, Controller.AuthController.getProfile);
-// router.put('/editProfile', auth, Controller.AuthController.editProfile);
-
-
+router.get('/getProfile', Auth('isAdmin'), Controller.Admin.getProfile);
+// router.put('/editProfile', Auth('isAdmin'), Controller.AuthController.editProfile);
 module.exports = router;

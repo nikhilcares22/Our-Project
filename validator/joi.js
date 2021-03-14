@@ -52,6 +52,7 @@ module.exports = {
         if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
         return value;
     },
+    validAdminProfile: function (data) { },
     validateUser: function (data) {
         const joiSchema = joi.object({
             firstName: joi.string().min(3).trim().required(undefined, { presence: "required" }),
