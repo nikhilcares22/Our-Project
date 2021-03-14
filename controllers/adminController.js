@@ -112,6 +112,8 @@ module.exports = {
             let foundUser = await Model.User.findOne(qry)
             if (!foundUser) return res.error(constants.TOKENEXPIRED, 201)
             foundUser.authToken = jwtService.generateToken({ id: foundUser._id, role: 'Admin' });
+            type == 'phone' ? foundUser.resetOtp = undefined : foundUser.resetPasswordToken = undefined;
+            type == 'phone' ? foundUser.resetOtpExpires = undefined : foundUser.resetPasswordExpires = undefined;
             await foundUser.save();
             return res.success(type == 'phone' ? constants.OTPVERIFIED : constants.USERVERIFIED, foundUser, 201)
         } catch (error) {
