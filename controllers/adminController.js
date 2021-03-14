@@ -124,5 +124,9 @@ module.exports = {
     getProfile: async (req, res, next) => {
         req.user = await Model.User.findById(req.user._id)
         return res.success(constants.SUCCESSFULL, req.user, 200)
+    },
+    updateProfile: async (req, res, next) => {
+        req.user = await Model.User.findById(req.user._id)
+        return res.success(constants.SUCCESSFULL, req.user, 200)
     }
 }
