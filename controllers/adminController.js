@@ -31,7 +31,11 @@ module.exports = {
     signin: async (req, res, next) => {
         try {
             req.body = ValidatorService.validateAdminSignin(req.body)
+            console.log(req.body);
             let resultUser = await Model.User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] })
+            console.log(resultUser);
+            if (!resultUser) return res.error(constants.NOTFOUND)
+            console.log(resultUser.comparePassword(req.body.password))
             if (!resultUser.comparePassword(req.body.password)) return res.error(constants.PWDMISMATCH, 401);
             let authToken = jwtService.generateToken({ id: resultUser._id, role: 'Admin' })
             let newObj = {
@@ -79,15 +83,15 @@ module.exports = {
 
                 // let newfoundUser = await dbService.checkIfExisting(Model.User, { email: email }, 'email');
 
-                let info = await emailService.sendMail({ email: email, type: 1, token: newfoundUser.resetPasswordToken })
+                let info = await emailService.sendMail({ email: email, type: 1, token: newfoundUser.resetPasswordToken, subject: 'Reset Password' })
                 return res.success(constants.EMAILSENTSUCCESS, info.accepted, 200);
             }
             if (type == 'phone') {
                 let foundUser = await dbService.checkIfExisting(Model.User, { phone: phone }, 'phone');
                 foundUser.generateOtpPasswordReset()
                 let newFoundUser = await foundUser.save();
-                console.log(`${constants.BASEURL}verifyUser/?code=${newFoundUser.resetOtp}&type=phone`)
-                let result = await twilioService.sendSMS({ phone: `91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}verifyUser/?code=${newFoundUser.resetOtp}&type=phone` })
+                console.log(`${constants.BASEURL}verifyUser?code=${newFoundUser.resetOtp}&type=phone`)
+                let result = await twilioService.sendSMS({ phone: `91${phone}`, otp: newFoundUser.resetOtp, link: `${constants.BASEURL}verifyUser?code=${newFoundUser.resetOtp}&type=phone` })
                 return res.success(constants.SMSSENTSUCCESS, result, 200)
             }                                                                                                                   
         } catch (error) {
@@ -99,19 +103,17 @@ module.exports = {
         try {
             let { type, code } = req.query;
             // let { code } = req.params;
-            if (type == 'email') {
-                let foundUser = await Model.User.findOne({ resetPasswordToken: code, resetPasswordExpires: { $gt: Date.now() } });
-                // if (!foundUser) return res.render() pending
+            let qry;
+            if (type == 'phone') {//phone case
+                qry = { resetOtp: code, resetOtpExpires: { $gt: Date.now() } }
+            } else {//email case
+                qry = { resetPasswordToken: code, resetPasswordExpires: { $gt: Date.now() } }
             }
-            if (type == 'phone') {
-                console.log(code, type, Date.now());
-                let foundUser = await Model.User.findOne({ resetOtp: code, resetOtpExpires: { $gt: Date.now() } }).lean();
-                if (!foundUser) return res.error(constants.TOKENEXPIRED, 201)
-                // console.log(foundUser);
-                let uniqueCode = await crypto.randomBytes(24)
-                console.log('djjd', uniqueCode.toString('hex'));
-                return res.success(constants.OTPVERIFIED, foundUser, 201)
-            }
+            let foundUser = await Model.User.findOne(qry)
+            if (!foundUser) return res.error(constants.TOKENEXPIRED, 201)
+            foundUser.authToken = jwtService.generateToken({ id: foundUser._id, role: 'Admin' });
+            await foundUser.save();
+            return res.success(type == 'phone' ? constants.OTPVERIFIED : constants.USERVERIFIED, foundUser, 201)
         } catch (error) {
             console.log(error)
             next(error);

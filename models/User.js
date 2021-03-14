@@ -65,17 +65,17 @@ var userSchema = new mongoose.Schema({
     //     default: 0
     // },
     resetPasswordExpires: {
-        type: Number,
+        type: String,
     },
     resetPasswordToken: {
         type: String,
         required: false
     },
     resetOtp: {
-        type: Number,
+        type: String,
     },
     resetOtpExpires: {
-        type: Number,
+        type: String,
     },
     authToken: {
         type: String,

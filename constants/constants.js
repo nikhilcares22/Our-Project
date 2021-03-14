@@ -21,6 +21,7 @@ module.exports = {
     TOKENEXPIRED: `Token expired`,
     USERVERIFIED: `User Verified`,
     OTPVERIFIED: `OTP Verified`,
+    NOTFOUND: `Not Found`,
 
     //token related
     TOKENMISSING: `Auth Token Missing.`,
