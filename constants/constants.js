@@ -9,6 +9,7 @@ module.exports = {
     USERNOTEXIST: `User doea not exists with this `,
     PWDMISMATCH: `Password does not match.`,
     INVALIDPASS: `Invalid Password`,
+    INVALIDCRED: `Invalid Credentials`,
     PWDCHANGED: `Password Changed Successfully`,
     LOGINSUCCESS: `Login Successfully`,
     EMAILSENTSUCCESS: `Email Sent Successfully`,

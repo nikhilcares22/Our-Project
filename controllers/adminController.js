@@ -33,10 +33,10 @@ module.exports = {
             req.body = ValidatorService.validateAdminSignin(req.body)
             // console.log(req.body);
             let resultUser = await Model.User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] })
-            console.log(resultUser);
+            // console.log(resultUser);
             if (!resultUser) return res.error(constants.NOTFOUND, 201)
             // console.log(resultUser.comparePassword(req.body.password))
-            if (!resultUser.comparePassword(req.body.password)) return res.error(constants.PWDMISMATCH, 401);
+            if (!resultUser.comparePassword(req.body.password)) return res.error(constants.INVALIDCRED, 201);
             let authToken = jwtService.generateToken({ id: resultUser._id, role: 'Admin' })
             let newObj = {
                 authToken: authToken
