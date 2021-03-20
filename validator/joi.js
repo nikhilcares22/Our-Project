@@ -9,10 +9,10 @@ module.exports = {
             lastName: joi.string().min(3).trim().optional(),
             // userName: joi.string().min(5).optional(),
             email: joi.string().trim().email(),
-            password: joi.string(),
+            password: joi.string().required(),
             // confirmPassword: joi.any().valid(joi.ref('password')).required().messages({ "any.only": 'Confirm password must be same as password' }),
-            countryCode: joi.string().required(),
-            phone: joi.number().required()
+            countryCode: joi.string().optional(),
+            phone: joi.number().optional()
         })
         let { error, value } = joiSchema.validate(data)
         if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
