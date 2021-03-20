@@ -37,7 +37,8 @@ var userSchema = new mongoose.Schema({
     password: {
         type: String,
         // required: true,
-        // select: false
+        // select: false,
+        // get: hashit
     },
     roles: {
         type: String,
@@ -113,12 +114,17 @@ var userSchema = new mongoose.Schema({
     }
 )
 
+// function hashit(pass) {
+//     return pass.replace(/./g, '#')
+// }
+
 userSchema.methods.generateHash = function (plainText) {//hashing before saving
     hash = Bcrypt.hashSync(plainText, 10);
     return (hash);
 };
 
 userSchema.methods.comparePassword = function (plaintext) {
+    console.log('sdussh', this.password);
     return Bcrypt.compareSync(plaintext, this.password)
 };
 

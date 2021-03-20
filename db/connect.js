@@ -1,5 +1,7 @@
 module.exports.configure = (mongoose) => {
-    let url = 'mongodb://localhost:27017/OurProject';
+    let p = process.argv.find(e => !isNaN(e)) || 27017
+    console.log('MONGOPORT== ', p);
+    let url = `mongodb://localhost:${p}/OurProject`;
     let connect = function () {
         mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
     }
