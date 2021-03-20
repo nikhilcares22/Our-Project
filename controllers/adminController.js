@@ -32,7 +32,7 @@ module.exports = {
         try {
             req.body = ValidatorService.validateAdminSignin(req.body)
             // console.log(req.body);
-            let resultUser = await Model.User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] })
+            let resultUser = await Model.User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] }).select('password')
             // console.log(resultUser);
             // if (!resultUser) return res.error(constants.NOTFOUND, 201)
             // console.log(resultUser.comparePassword(req.body.password))
@@ -41,7 +41,7 @@ module.exports = {
             let newObj = {
                 authToken: authToken
             }
-            let updatedUser = await Model.User.findOneAndUpdate({ _id: resultUser._id }, newObj, { new: true })
+            let updatedUser = await Model.User.findOneAndUpdate({ _id: resultUser._id }, newObj, { new: true }).select('-password')
             return res.success(constants.LOGINSUCCESS, updatedUser, 200)
         } catch (error) {
             console.log(error);
