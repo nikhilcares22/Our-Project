@@ -10,7 +10,7 @@ module.exports = {
             // userName: joi.string().min(5).optional(),
             email: joi.string().trim().email(),
             password: joi.string(),
-            confirmPassword: joi.any().valid(joi.ref('password')).required().messages({ "any.only": 'Confirm password must be same as password' }),
+            // confirmPassword: joi.any().valid(joi.ref('password')).required().messages({ "any.only": 'Confirm password must be same as password' }),
             countryCode: joi.string().required(),
             phone: joi.number().required()
         })
