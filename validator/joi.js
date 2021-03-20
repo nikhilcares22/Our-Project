@@ -4,7 +4,8 @@ module.exports = {
     //admin
     validateAdminSignup: function (data) {
         const joiSchema = joi.object({
-            firstName: joi.string().min(3).trim().required(undefined, { presence: "required" }),
+            // firstName: joi.string().min(3).trim().optional(undefined, { presence: "required" }),
+            firstName: joi.string().min(3).trim().optional(),
             lastName: joi.string().min(3).trim().optional(),
             // userName: joi.string().min(5).optional(),
             email: joi.string().trim().email(),
