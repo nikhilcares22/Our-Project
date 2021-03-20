@@ -41,7 +41,7 @@ module.exports = {
             let newObj = {
                 authToken: authToken
             }
-            let updatedUser = await Model.User.findOneAndUpdate({ _id: resultUser._id }, newObj, { new: true }).select('-password')
+            let updatedUser = await Model.User.findOneAndUpdate({ _id: resultUser._id }, newObj, { new: true })
             return res.success(constants.LOGINSUCCESS, updatedUser, 200)
         } catch (error) {
             console.log(error);
