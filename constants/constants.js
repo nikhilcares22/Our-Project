@@ -23,6 +23,7 @@ module.exports = {
     USERVERIFIED: `User Verified`,
     OTPVERIFIED: `OTP Verified`,
     NOTFOUND: `Not Found`,
+    UPDATED: `Update Successfully`,
 
     //token related
     TOKENMISSING: `Auth Token Missing.`,

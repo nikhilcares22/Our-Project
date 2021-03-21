@@ -86,5 +86,20 @@ module.exports = {
         let { error, value } = joiSchema.validate(data)
         if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
         return value;
+    },
+    validateUpdateProfile: function (data) {
+        const joiSchema = joi.object({
+            firstName: joi.string().min(3).trim(),
+            lastName: joi.string().min(3).trim(),
+            // userName: joi.string().min(5).optional(),
+            email: joi.string().trim().email(),
+            profilePic: joi.string(),
+            countryCode: joi.string(),
+            phone: joi.number()
+        })
+        // return joi.validate(data, joiSchema)
+        let { error, value } = joiSchema.validate(data)
+        if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
+        return value;
     }
 }

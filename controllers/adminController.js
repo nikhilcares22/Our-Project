@@ -1,12 +1,20 @@
 const ValidatorService = require('../validator/joi')
 const Model = require('../models');
 const dbService = require('../db/dbServices');
-const crypto = require('crypto');
 const jwtService = require('../services/jwtService');
 const twilioService = require('../services/twilioService');
 const emailService = require('../services/emailService');
+const UploadService = require('../services/UploadService');
 const constants = require('../constants/constants');
 module.exports = {
+    test: async (req, res, next) => {
+        try {
+            console.log(req.file);
+            UploadService.imageUpload(req.file.buffer, req.file.originalname)
+        } catch (error) {
+            console.log(error);
+        }
+    },
     signup: async (req, res, next) => {
         try {
             req.body = ValidatorService.validateAdminSignup(req.body)
@@ -122,11 +130,24 @@ module.exports = {
         }
     },
     getProfile: async (req, res, next) => {
+        try {
         req.user = await Model.User.findById(req.user._id)
         return res.success(constants.SUCCESSFULL, req.user, 200)
+        } catch (error) {
+            console.log(error)
+            next(error);
+        }
     },
     updateProfile: async (req, res, next) => {
-        req.body = ValidatorService.valdi(req.body)
+        try {
+            req.body = ValidatorService.validateUpdateProfile(req.body)
+            let foundUser = await Model.User.findOneAndUpdate({ _id: ObjectId(req.user._id) }, { $set: req.body }, { new: true })
+            return res.success(constants.UPDATED, foundUser, 201)
+
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
 
     }
 }

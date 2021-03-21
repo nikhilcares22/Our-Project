@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Controller = require('../controllers/index')
+const UploadService = require('../services/UploadService')
 const { Auth } = require('../middleware/index')
 
 // Onboarding
@@ -10,5 +11,8 @@ router.post('/resetPassword', Controller.Admin.resetPassword);
 router.get('/verifyUser', Controller.Admin.verifyUser);
 router.put('/changePass', Controller.Admin.changePassword)
 router.get('/getProfile', Auth('isAdmin'), Controller.Admin.getProfile);
-// router.put('/editProfile', Auth('isAdmin'), Controller.AuthController.editProfile);
+router.put('/updateProfile', Auth('isAdmin'), Controller.Admin.updateProfile);
+router.post('/test', UploadService.upload.single
+    ('image'), Controller.Admin.test);
+
 module.exports = router;
