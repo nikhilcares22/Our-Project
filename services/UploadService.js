@@ -13,8 +13,8 @@ let s3bucket = new AWS.S3({
 });
 
 const imageUpload = (buffer, name) => {
-        const params = {
-            Bucket: process.env.AWS_BUCKET_NAME,
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
         Key: 'profilePic' + '/' + Date.now() + name,
         Body: buffer,
         ACL: 'public-read',
@@ -24,6 +24,7 @@ const imageUpload = (buffer, name) => {
     return new Promise((resolve, reject) => {
         s3bucket.upload(params, (err, data) => {
             if (err) return reject(err)
+            console.log(data);
             resolve(data)
         })
     })

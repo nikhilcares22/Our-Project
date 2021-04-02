@@ -95,7 +95,7 @@ module.exports = {
             email: joi.string().trim().email(),
             profilePic: joi.string(),
             countryCode: joi.string(),
-            phone: joi.number()
+            phone: joi.number(),
         })
         // return joi.validate(data, joiSchema)
         let { error, value } = joiSchema.validate(data)

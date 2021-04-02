@@ -11,7 +11,11 @@ router.post('/resetPassword', Controller.Admin.resetPassword);
 router.get('/verifyUser', Controller.Admin.verifyUser);
 router.put('/changePass', Controller.Admin.changePassword)
 router.get('/getProfile', Auth('isAdmin'), Controller.Admin.getProfile);
-router.put('/updateProfile', Auth('isAdmin'), Controller.Admin.updateProfile);
+router.put('/updateProfile', Auth('isAdmin'), UploadService.upload.single
+    ('image'), Controller.Admin.updateProfile);
+
+
+
 router.post('/test', UploadService.upload.single
     ('image'), Controller.Admin.test);
 

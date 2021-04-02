@@ -10,7 +10,8 @@ module.exports = {
     test: async (req, res, next) => {
         try {
             console.log(req.file);
-            UploadService.imageUpload(req.file.buffer, req.file.originalname)
+            let result = UploadService.imageUpload(req.file.buffer, req.file.originalname)
+            return res.success(constants.SUCCESSFULL, result)
         } catch (error) {
             console.log(error);
         }
@@ -141,6 +142,7 @@ module.exports = {
     updateProfile: async (req, res, next) => {
         try {
             req.body = ValidatorService.validateUpdateProfile(req.body)
+            if (req.file) req.body.profilePic = req.file.filename
             let foundUser = await Model.User.findOneAndUpdate({ _id: ObjectId(req.user._id) }, { $set: req.body }, { new: true })
             return res.success(constants.UPDATED, foundUser, 201)
 
