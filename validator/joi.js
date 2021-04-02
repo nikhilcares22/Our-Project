@@ -5,14 +5,14 @@ module.exports = {
     validateAdminSignup: function (data) {
         const joiSchema = joi.object({
             // firstName: joi.string().min(3).trim().optional(undefined, { presence: "required" }),
-            firstName: joi.string().min(3).trim().optional(),
-            lastName: joi.string().min(3).trim().optional(),
+            // firstName: joi.string().min(3).trim().optional(),
+            // lastName: joi.string().min(3).trim().optional(),
             // userName: joi.string().min(5).optional(),
             email: joi.string().trim().email(),
             password: joi.string(),
-            confirmPassword: joi.any().valid(joi.ref('password')).required().messages({ "any.only": 'Confirm password must be same as password' }),
-            countryCode: joi.string().required(),
-            phone: joi.number().required()
+            // confirmPassword: joi.any().valid(joi.ref('password')).required().messages({ "any.only": 'Confirm password must be same as password' }),
+            // countryCode: joi.string().required(),
+            // phone: joi.number().required()
         })
         let { error, value } = joiSchema.validate(data)
         if (error) throw (`Validation Error: ${error.details.map(x => x.message).join(' ,')}`)
