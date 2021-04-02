@@ -11,10 +11,24 @@ let s3bucket = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: process.env.AWS_REGION
 });
-const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: image.originalname,
-    Body: file,
-    ContentType: image.mimetype,
-    ACL: 'public-read'
-};
+
+const imageUpload = (buffer, name) => {
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: 'profilePic' + '/' + Date.now() + name,
+        Body: buffer,
+        ACL: 'public-read',
+        // ContentEncoding: 'base64', // required
+        // ContentType: `image/${type}`
+    }
+    return new Promise((resolve, reject) => {
+        s3bucket.upload(params, (err, data) => {
+            if (err) return reject(err)
+            console.log(data);
+            resolve(data)
+        })
+    })
+}
+
+exports.upload = upload
+exports.imageUpload = imageUpload

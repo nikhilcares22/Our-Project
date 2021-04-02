@@ -12,7 +12,7 @@ const getTypeMsg = function (type, token) {
     switch (type) {
         case 1:
             resultText = `This is the mail for reset password 
-            please click on the link below to confirm that it is you who want to reset password or ignore if that's not you ${constants.BASEURL}api/admin/verifyUser?code=${token}`
+            please click on the link below to confirm that it is you who want to reset password or ignore if that's not you ${constants.BASEURL}user/resetpassword/code=${token}`
             break;
         default: throw new Error('No type')
     }

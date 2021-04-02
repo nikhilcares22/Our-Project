@@ -124,7 +124,6 @@ userSchema.methods.generateHash = function (plainText) {//hashing before saving
 };
 
 userSchema.methods.comparePassword = function (plaintext) {
-    console.log('sdussh', this.password);
     return Bcrypt.compareSync(plaintext, this.password)
 };
 

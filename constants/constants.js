@@ -23,6 +23,7 @@ module.exports = {
     USERVERIFIED: `User Verified`,
     OTPVERIFIED: `OTP Verified`,
     NOTFOUND: `Not Found`,
+    UPDATED: `Update Successfully`,
 
     //token related
     TOKENMISSING: `Auth Token Missing.`,
@@ -34,4 +35,6 @@ module.exports = {
     NOTAUSER: `Not an user`,
 
     BASEURL: `http://localhost:8080/`,
+    TEMPBASE: `http://localhost:4200/`,
+    IMGURL: `https://ourprojectbucket1.s3.ap-south-1.amazonaws.com/`,
 }
