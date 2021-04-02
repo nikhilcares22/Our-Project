@@ -18,14 +18,14 @@ module.exports = (...args) => async (req, res, next) => {
         let found
         if (role == 'isAdmin') {
             found = await Model.User.findOne({ _id: decoded.data.id, roles: 'admin', isDeleted: false, authToken: token })
-            if (!found) res.error(constants.NOTANADMIN, 404)
+            if (!found) return res.error(constants.NOTANADMIN, 404)
         }
         else if (role == 'isUser') {
             found = await Model.User.findOne({ _id: decoded.data.id, roles: 'user', isDeleted: false, authToken: token })
-            if (!found) res.error(constants.NOTAUSER, 404)
+            if (!found) return res.error(constants.NOTAUSER, 404)
         }
         else {
-            res.error(constants.INVALIDAUTHROLE, 401)
+            return res.error(constants.INVALIDAUTHROLE, 401)
         }
         req.user = found;
         next();

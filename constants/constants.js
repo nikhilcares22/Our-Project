@@ -36,5 +36,4 @@ module.exports = {
 
     BASEURL: `http://localhost:8080/`,
     TEMPBASE: `http://localhost:4200/`,
-    IMGURL: `https://ourprojectbucket1.s3.ap-south-1.amazonaws.com/`,
 }
