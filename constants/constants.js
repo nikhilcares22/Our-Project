@@ -6,7 +6,7 @@ module.exports = {
     //user related
     VALIDATION: `Validation error`,
     USEREXIST: `User already exists with `,
-    USERNOTEXIST: `User doea not exists with this `,
+    USERNOTEXIST: `User does not exists with this `,
     PWDMISMATCH: `Password does not match.`,
     INVALIDPASS: `Invalid Password`,
     INVALIDCRED: `Invalid Credentials`,
